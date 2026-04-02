@@ -56,6 +56,20 @@ get_best_session() {
     printf '%s' "$best_session"
 }
 
+# get_registered_workspace <session_name>
+# Returns the workspace path recorded for a session.
+# Reads the stored session option first; falls back to #{session_path} when
+# the option has not been set yet (e.g. sessions created outside this plugin).
+get_registered_workspace() {
+    local session="$1"
+    local value
+    value="$(tmux show-option -qv -t "$session" "$OPTION" 2>/dev/null)"
+    if [[ -z "$value" ]]; then
+        value="$(get_workspace_path "$session")"
+    fi
+    printf '%s' "$value"
+}
+
 # register_workspace <session_name> <workspace_path>
 # Stores the workspace path as a session option so future sessions can detect
 # that this workspace is already owned.

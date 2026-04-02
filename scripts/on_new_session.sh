@@ -15,7 +15,7 @@ tmux_work_log_info "current workspace: $CURRENT_WORKSPACE"
 FOUND_SESSIONS=()
 for s in $(tmux list-sessions -F '#{session_name}'); do
     [[ "$s" == "$CURRENT_SESSION_NAME" ]] && continue
-    value="$(tmux show-option -qv -t "$s" "$OPTION")"
+    value="$(get_registered_workspace "$s")"
     tmux_work_log_info "session=$s workspace=$value"
     if [[ "$value" == "$CURRENT_WORKSPACE" ]]; then
         FOUND_SESSIONS+=("$s")
@@ -73,9 +73,12 @@ format="#{?#{==:#{session_name},$CURRENT_SESSION_NAME},★ NEW ,      }  #{sessi
 # -s  start at session level
 # -f  filter — only show matching sessions
 # -F  format string for each row
-# template: #{session_name} is expanded by tmux to the selected session's name
+# template: %% expands to the SELECTED item's name in choose-tree.
+#   Do NOT use #{session_name} here — that expands in the current client's
+#   context (always the new/hook session), not the chosen session's context.
+tmux_work_log_info "choose-tree filter='$filter'"
 tmux choose-tree -Zs \
     -f "$filter" \
     -F "$format" \
-    "run-shell '$CURRENT_DIR/choose_handler.sh #{session_name} $CURRENT_SESSION_NAME'"
+    "run-shell '$CURRENT_DIR/choose_handler.sh %% $CURRENT_SESSION_NAME'"
 
