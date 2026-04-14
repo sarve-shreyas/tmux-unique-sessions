@@ -22,7 +22,7 @@ tmux_work_log() {
 }
 
 tmux_work_log_info() {
-    tmux_work_logging_enabled || return 0
+    # tmux_work_logging_enabled || return 0
     tmux_work_log "INFO" "$*"
 }
 

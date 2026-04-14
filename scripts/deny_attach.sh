@@ -15,4 +15,5 @@ CURRENT_SESSION="$2"
 CURRENT_WORKSPACE="$(get_workspace_path "$CURRENT_SESSION")"
 
 tmux_work_log_info "deny_attach: staying in '$CURRENT_SESSION' (found='$FOUND_SESSION' was ignored)"
+CURRENT_SESSION="$(auto_rename_session "$CURRENT_SESSION" "$CURRENT_WORKSPACE")"
 register_workspace "$CURRENT_SESSION" "$CURRENT_WORKSPACE"

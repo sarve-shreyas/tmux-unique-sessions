@@ -38,3 +38,38 @@ DELETE_STRATEGY_ALWAYS="always"
 DELETE_STRATEGY_NEVER="never"
 DELETE_STRATEGY_GREATER_PREFIX="greater:"
 
+## workspace root anchoring strategy
+## set via: tmux set-option -g @workspace_root_strategy "git,package"
+## values (comma-separated, tried in order; first match wins):
+##   git          - anchor to the nearest ancestor containing .git
+##   package      - anchor to the nearest ancestor containing package.json
+##   session_path - use the raw session path as-is (always the final fallback)
+WORKSPACE_ROOT_STRATEGY_OPTION="@workspace_root_strategy"
+
+## auto-rename session to workspace basename
+## set via: tmux set-option -g @workspace_auto_rename "1"
+## When enabled, a newly registered session is renamed according to
+## @workspace_rename_strategy.  If the resulting name is already taken by
+## another session, a numeric suffix is appended: nvim, nvim-2, nvim-3, …
+WORKSPACE_AUTO_RENAME_OPTION="@workspace_auto_rename"
+
+## rename strategy — controls how the session name is derived from the
+## workspace path.  Only applies when @workspace_auto_rename is "1".
+## set via: tmux set-option -g @workspace_rename_strategy "basename"
+## values:
+##   basename        - directory name only            (~/.config/nvim → nvim)
+##   parent-basename - parent/name, useful in monorepos (packages/ui → packages/ui)
+##   git-branch      - name:branch when inside a git repo (myapp:feature/login);
+##                     falls back to basename outside a git repo
+##   relative        - path relative to $HOME         (projects/myapp → projects/myapp);
+##                     falls back to basename when path is outside $HOME
+##   workspace-root  - basename of the project root resolved via
+##                     @workspace_root_strategy (e.g. git root → myapp);
+##                     falls back to basename when no root anchor matches
+WORKSPACE_RENAME_STRATEGY_OPTION="@workspace_rename_strategy"
+WORKSPACE_RENAME_STRATEGY_BASENAME="basename"
+WORKSPACE_RENAME_STRATEGY_PARENT_BASENAME="parent-basename"
+# WORKSPACE_RENAME_STRATEGY_GIT_BRANCH="git-branch"
+WORKSPACE_RENAME_STRATEGY_RELATIVE="relative"
+WORKSPACE_RENAME_STRATEGY_WORKSPACE_ROOT="workspace-root"
+

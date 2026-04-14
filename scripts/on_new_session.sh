@@ -25,6 +25,7 @@ done
 # ── no match: register current session and exit ──────────────────────────────
 if [[ ${#FOUND_SESSIONS[@]} -eq 0 ]]; then
     tmux_work_log_info "no session found for workspace: $CURRENT_WORKSPACE"
+    CURRENT_SESSION_NAME="$(auto_rename_session "$CURRENT_SESSION_NAME" "$CURRENT_WORKSPACE")"
     register_workspace "$CURRENT_SESSION_NAME" "$CURRENT_WORKSPACE"
     exit 0
 fi

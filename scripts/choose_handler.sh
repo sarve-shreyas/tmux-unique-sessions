@@ -7,10 +7,13 @@
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$CURRENT_DIR/logger.sh"
 
-SELECTED_SESSION="$1"
+# $1 is the raw target specifier from choose-tree's %% (e.g. "=89:" or "myname:")
+# Resolve it to a bare session name via tmux.
+RAW_TARGET="$1"
 CURRENT_SESSION="$2"
+SELECTED_SESSION="$(tmux display-message -p -t "$RAW_TARGET" '#{session_name}' 2>/dev/null)"
 
-tmux_work_log_info "choose_handler: selected='$SELECTED_SESSION' current='$CURRENT_SESSION'"
+tmux_work_log_info "choose_handler: raw_target='$RAW_TARGET' selected='$SELECTED_SESSION' current='$CURRENT_SESSION'"
 
 if [[ "$SELECTED_SESSION" == "$CURRENT_SESSION" ]]; then
     # User picked the ★ NEW entry — stay, just register
